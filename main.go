@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"strings"
 )
 
 // Hello is hello struct
@@ -30,12 +31,14 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func readUserIP(r *http.Request) string {
-	IPAddress := r.Header.Get("X-Real-Ip")
-	if IPAddress == "" {
-		IPAddress = r.Header.Get("X-Forwarded-For")
+	iPAddressString := r.Header.Get("X-Real-Ip")
+	if iPAddressString == "" {
+		iPAddressString = r.Header.Get("X-Forwarded-For")
 	}
-	if IPAddress == "" {
-		IPAddress = r.RemoteAddr
+	if iPAddressString == "" {
+		iPAddressString = r.RemoteAddr
 	}
-	return IPAddress
+	ipAddressArray := strings.Split(iPAddressString, ",")
+
+	return ipAddressArray[0]
 }
